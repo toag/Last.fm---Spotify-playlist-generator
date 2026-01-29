@@ -74,7 +74,7 @@ export default function Home() {
 
     try {
       const response = await axios.post('/api/spotify/create-playlist', {
-        tracks: lastfmData.tracks,
+        tracks: lastfmData.tracks.slice(0, 200),
         playlistName: lastfmData.playlistName,
       })
 
@@ -117,8 +117,26 @@ export default function Home() {
 
         {/* Card */}
         <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 shadow-2xl">
-          {!lastfmData ? (
-            // Step 1: Fetch Last.fm data
+          {!spotifyAuth ? (
+            // Step 1: Spotify Auth
+            <div className="space-y-6">
+              <p className="text-center text-gray-300 text-sm">
+                First, connect your Spotify account to create playlists
+              </p>
+
+              <button
+                onClick={handleSpotifyAuth}
+                className="w-full py-3 px-4 rounded-lg bg-[#1DB954] hover:bg-[#1ed760] text-white font-600 transition shadow-lg hover:shadow-xl"
+              >
+                Connect with Spotify
+              </button>
+
+              <p className="text-xs text-gray-500 text-center">
+                We'll never store your credentials
+              </p>
+            </div>
+          ) : !lastfmData ? (
+            // Step 2: Fetch Last.fm data (after Spotify auth)
             <form onSubmit={handleLastfmSubmit} className="space-y-6">
               <div>
                 <label htmlFor="username" className="block text-sm font-500 text-gray-300 mb-2">
@@ -179,9 +197,17 @@ export default function Home() {
                   'Fetch Last.fm Tracks'
                 )}
               </button>
+
+              <button
+                type="button"
+                onClick={() => setSpotifyAuth(false)}
+                className="w-full py-2 px-4 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white text-sm transition"
+              >
+                Change Spotify Account
+              </button>
             </form>
           ) : (
-            // Step 2: Show Last.fm data and Spotify auth
+            // Step 3: Show Last.fm data and create playlist
             <div className="space-y-6">
               <div className="bg-white/5 border border-white/10 rounded-lg p-4">
                 <p className="text-sm text-gray-400 mb-2">
@@ -214,29 +240,20 @@ export default function Home() {
                 </div>
               )}
 
-              {!spotifyAuth ? (
-                <button
-                  onClick={handleSpotifyAuth}
-                  className="w-full py-3 px-4 rounded-lg bg-[#1DB954] hover:bg-[#1ed760] text-white font-600 transition shadow-lg hover:shadow-xl"
-                >
-                  Connect with Spotify
-                </button>
-              ) : (
-                <button
-                  onClick={handleCreatePlaylist}
-                  disabled={creatingPlaylist}
-                  className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-600 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
-                >
-                  {creatingPlaylist ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                      Creating Playlist...
-                    </span>
-                  ) : (
-                    '✓ Create Spotify Playlist'
-                  )}
-                </button>
-              )}
+              <button
+                onClick={handleCreatePlaylist}
+                disabled={creatingPlaylist}
+                className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-600 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+              >
+                {creatingPlaylist ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                    Creating Playlist...
+                  </span>
+                ) : (
+                  '✓ Create Spotify Playlist'
+                )}
+              </button>
 
               <button
                 onClick={() => {
@@ -247,7 +264,7 @@ export default function Home() {
                 }}
                 className="w-full py-2 px-4 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white text-sm transition"
               >
-                Start Over
+                Fetch Different Tracks
               </button>
             </div>
           )}
