@@ -8,16 +8,30 @@ Simple web app to export your Last.fm listening history into Spotify playlists.
 - Create Spotify playlists from selected tracks
 - Real-time track matching and import
 
-## Stack (TBD)
-- Frontend: React
-- Backend: Node.js/Express
-- APIs: Last.fm, Spotify
+## Stack
+- Frontend: React + Next.js
+- Backend: Next.js API Routes
+- APIs: Last.fm, Spotify OAuth 2.0
+- Styling: Tailwind CSS
 
 ## Setup
-1. Get Last.fm API key: https://www.last.fm/api
-2. Get Spotify API credentials: https://developer.spotify.com
-3. Configure environment variables
-4. Install dependencies & run
+
+### Prerequisites
+- Node.js 16+
+- Last.fm & Spotify API credentials
+
+### Local Development
+1. Clone repo: `git clone https://github.com/toag/Last.fm---Spotify-playlist-generator.git`
+2. Install: `npm install`
+3. Create `.env.local` from `.env.example`
+4. Add API keys to `.env.local`
+5. Run: `npm run dev`
+6. Open `http://localhost:3000`
+
+### Deployment
+- Deployed on Vercel
+- Auto-deploys on git push
+- Update Spotify redirect URI to production URL
 
 ## Status
-Development phase - Not production ready
+Development phase - Portfolio ready
